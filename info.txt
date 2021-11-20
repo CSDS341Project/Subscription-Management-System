@@ -1,0 +1,2 @@
+Ports for security group: port 22 (tcp) for SSH, port 3306 for SQL,
+port 5000 for Flask server, port 80 to deliver HTTP.
