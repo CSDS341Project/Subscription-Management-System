@@ -6,5 +6,3 @@
  * Running on all addresses.
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://172.31.34.76:5000/ (Press CTRL+C to quit)
-129.22.21.197 - - [20/Nov/2021 18:07:06] "GET /test HTTP/1.1" 200 -
-129.22.21.197 - - [20/Nov/2021 18:07:07] "GET /test HTTP/1.1" 200 -
