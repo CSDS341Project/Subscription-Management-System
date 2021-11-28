@@ -26,11 +26,11 @@ def login():
                 password=passwrd,
                 database="subscription_db" 
             )
-            mycursor = mydb.cursor
-            return True
         except Exception:
-            return False
-            
+            return False     
+        mycursor = mydb.cursor
+        return True
+
     else:
         username = request.form['username']
         passwrd = request.form['password']
@@ -38,7 +38,7 @@ def login():
             mydb = mysql.connector.connect(
                 user=username,
                 password=passwrd,
-                database="test" #change this
+                database="subscription_db" 
             )
         except Exception:
             return False
@@ -48,7 +48,8 @@ def login():
 #get all subscriptions
 @app.route("/getAll")
 def getAll():
-    pass
+    operation = ('''insert sql here to get everything
+                ''')
 
 #update subscription by the subscriptions ID
 #params not at thing in Flask, so they'll just be pulled off of the request
@@ -71,27 +72,37 @@ def getWhere():
 
 
 #Create a new subscription based on properties specified 
-@app.route("/create")
-def create():
+@app.route("/insert")
+def insert():
     pass
 
 
 def getInput():
-    print("here")
+    print("Successfully entered SMS. Inputs are separated by a new line. Please see manual for instructions.")
     while True:
-        pass
+        data = input()
+        executeCommand(data.split()[0], data.split()[1:])
+
+        
+def executeCommand(command, args):
+    if command == 'SHOW':
+        if len(args) == 0 or args[0] == 'ALL':
+            getAll()
+    elif command == 'INSERT':
+        pass #insert logic here, make elifs for any other command
+    else:
+        print("*Error*: Unknown/Unsupported command")
+
+
+
+        
 
 if __name__ == '__main__':
-    print(sys.argv[1])
-    print(sys.argv[1])
-
-    print(sys.argv[1])
-
     if len(sys.argv) == 2 and sys.argv[1] == "CLI":
         CLI = True
         if login():
             getInput()
         else:
-            print("Invalid credentials")
+            print("Invalid credentials, aborting.")
     else:
         app.run(host='0.0.0.0', port=5000)
