@@ -51,7 +51,37 @@ def login():
 #get all subscriptions
 @app.route("/getAll")
 def getAll():
-    operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN DB_Account_Information a WHERE a.db_username = '{username}'")
+    operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN DB_Account_Information a WHERE db_username = '{username}'")
+    try:
+        mycursor.execute(operation)
+        result = mycursor.fetchall()
+        print(result)
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+@app.route("/getSubsByCardNum")
+def getSubsByCardNum(cardNum):
+    operation = (f"SELECT p.name FROM Platform p, Payment_Method pm, Subscription s, hasBillingInfo hb WHERE s.platform_id = p.platform_id AND hb.subscription_id = s.subscription_id AND hb.invoice_id = pm.invoice_id AND pm.card_number= {cardNum} AND s.db_username = '{username}'")
+    try:
+        mycursor.execute(operation)
+        result = mycursor.fetchall()
+        print(result)
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+@app.route("/getComparison")
+def getComparison(comparator, num):
+    operation = (f"SELECT p.name, i.billing_freq FROM Invoice i, Subscription s, Platform p WHERE s.platform_id = p.platform_id AND s.subscription_id = i.subscription_id AND i.amount_due {comparator} {num} AND s.db_username = '{username}'")
+    try:
+        mycursor.execute(operation)
+        result = mycursor.fetchall()
+        print(result)
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+@app.route("/getByFrequency")
+def getByFrequency(freq):
+    operation = (f"SELECT p.name FROM Invoice i, Subscription s, Platform p WHERE s.platform_id = p.platform_id AND s.subscription_id = i.subscription_id AND i.billing_freq = '{freq}' AND s.db_username = '{username}'")
     try:
         mycursor.execute(operation)
         result = mycursor.fetchall()
@@ -96,6 +126,21 @@ def executeCommand(command, args):
     if command == 'SHOW':
         if len(args) == 0 or args[0] == 'ALL':
             getAll()
+        elif args[0] == 'CARDNUM':
+            if len(args) >= 2:
+                getSubsByCardNum(args[1])
+            else:
+                print("Please specify a card number.")
+        elif args[0] == '<' or args[0] == '>' or args[0] == '=':
+            if len(args) >= 2:
+                getComparison(args[0], args[1])
+            else:
+                print("Please provide an additional argument.")
+        elif args[0] == 'FREQUENCY':
+            if len(args) >= 2:
+                getByFrequency(args[1])
+            else:
+                print("Please specify a frequency.")
     elif command == 'INSERT':
         pass #insert logic here, make elifs for any other command
     else:
