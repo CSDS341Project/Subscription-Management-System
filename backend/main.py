@@ -1,10 +1,12 @@
 import mysql.connector
+from mysql.connector import Error
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sys
 CLI = False
 mycursor = None
 username = None
+mydb = None
 
 #start backend flask thing
 app = Flask(__name__)
@@ -16,6 +18,7 @@ CORS(app)
 def login():
     global mycursor
     global username
+    global mydb
     if CLI:
         username = input("Username: ")
         passwrd = input("Password: ")
@@ -24,11 +27,11 @@ def login():
                 host='18.220.211.136',
                 user=username,
                 password=passwrd,
-                database="subscription_db" 
+                database="subscription_db_new" 
             )
         except Exception:
             return False     
-        mycursor = mydb.cursor
+        mycursor = mydb.cursor()
         return True
 
     else:
@@ -38,7 +41,7 @@ def login():
             mydb = mysql.connector.connect(
                 user=username,
                 password=passwrd,
-                database="subscription_db" 
+                database="subscription_db_new" 
             )
         except Exception:
             return False
@@ -48,8 +51,13 @@ def login():
 #get all subscriptions
 @app.route("/getAll")
 def getAll():
-    operation = ('''insert sql here to get everything
-                ''')
+    operation = ("SELECT * FROM Subscription")
+    try:
+        mycursor.execute(operation)
+        result = mycursor.fetchall()
+        print(result)
+    except Error as e:
+        print(f"The error '{e}' occurred")
 
 #update subscription by the subscriptions ID
 #params not at thing in Flask, so they'll just be pulled off of the request
