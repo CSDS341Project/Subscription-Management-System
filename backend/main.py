@@ -27,7 +27,7 @@ def login():
                 host='18.220.211.136',
                 user=username,
                 password=passwrd,
-                database="subscription_db_new" 
+                database="test" 
             )
         except Exception:
             return False     
@@ -41,7 +41,7 @@ def login():
             mydb = mysql.connector.connect(
                 user=username,
                 password=passwrd,
-                database="subscription_db_new" 
+                database="test" 
             )
         except Exception:
             return False
@@ -51,7 +51,7 @@ def login():
 #get all subscriptions
 @app.route("/getAll")
 def getAll():
-    operation = ("SELECT * FROM Subscription")
+    operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN DB_Account_Information a WHERE a.db_username = '{username}'")
     try:
         mycursor.execute(operation)
         result = mycursor.fetchall()
