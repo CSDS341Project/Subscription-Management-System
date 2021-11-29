@@ -11,31 +11,27 @@ class LoginPage extends Component {
     this.state = {
       username: '',
       password: '',
-      error: '',
+      er: '',
     };
 
-    this.handlePassChange = this.handlePassChange.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
+    this.handlePassChange = this.handlePassChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.dismissError = this.dismissError.bind(this);
-  }
-
-  dismissError() {
-    this.setState({ error: '' });
+    this.ignoreError = this.ignoreError.bind(this);
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
 
     if (!this.state.username) {
-      return this.setState({ error: 'Username is required' });
+      return this.setState({ er: 'Please Enter Your Username' });
     }
 
     if (!this.state.password) {
-      return this.setState({ error: 'Password is required' });
+      return this.setState({ er: 'Please Enter Your Password' });
     }
 
-    return this.setState({ error: '' });
+    return this.setState({ er: '' });
   }
 
   handleUserChange(evt) {
@@ -50,18 +46,20 @@ class LoginPage extends Component {
     });
   }
 
+  ignoreError() {
+    this.setState({ er: '' });
+  }
+
   render() {
-    // NOTE: I use data-attributes for easier E2E testing
-    // but you don't need to target those (any css-selector will work)
 
     return (
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
           {
-            this.state.error &&
-            <h3 data-test="error" onClick={this.dismissError}>
-              <button onClick={this.dismissError}>✖</button>
-              {this.state.error}
+            this.state.er &&
+            <h3 data-test="er" onClick={this.ignoreError}>
+              <button onClick={this.ignoreError}>✖</button>
+              {this.state.er}
             </h3>
           }
           <TextField type="text" label="username" variant="filled" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
