@@ -32,8 +32,8 @@ class LoginPage extends Component {
       
       var socket = io('ws://18.220.211.136:5000')
       socket.on('connect', function() {
-          socket.emit('json', {data: "connected"});
-          console.log("connected");
+          socket.emit('json', {username: username,
+                                password: password});
       });
     }
   
