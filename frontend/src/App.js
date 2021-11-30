@@ -3,9 +3,17 @@ import './App.css';
 import LoginPage from './login';
 import ws from './socketConfig'
 function App() {
-  ws.on('message', function() {
-    console.log("here");
-  })
+  ws.on('message', function(message) {
+    if (message['login'] === 'successful') {
+      console.log("Login successful")
+    }
+    else {
+      console.log("Login failed.")
+    }
+  });
+
+
+
   return (
     <div className="App">
       <header className="App-header">
