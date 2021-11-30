@@ -17,7 +17,6 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 
 #Log into DBMS with account. If true, login successful and HTML can change
 #If can't log in, indicate with false
-@socketio.on('connect')
 def login():
     global mycursor
     global username
@@ -30,11 +29,11 @@ def login():
                 host='18.220.211.136',
                 user=username,
                 password=passwrd,
-                database="test" 
+                database="test"
             )
         except Exception:
-            
-            return False   
+
+            return False
         mycursor = mydb.cursor()
         return True
 
@@ -149,7 +148,6 @@ def executeCommand(command, args):
 def handleRemoteMessage(json):
     print(str(json))
 
-        
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == "CLI":
@@ -159,4 +157,4 @@ if __name__ == '__main__':
         else:
             print("Invalid credentials, aborting.")
     else:
-        socketio.run(host='0.0.0.0', port=5000)
+        socketio.run(app, host='0.0.0.0', port=5000)
