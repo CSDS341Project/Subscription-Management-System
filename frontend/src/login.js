@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { io } from "socket.io-client";
 
 
+
 class LoginPage extends Component {
     constructor() {
       super();
@@ -29,11 +30,12 @@ class LoginPage extends Component {
       if (!this.state.password) {
         return this.setState({ er: 'Please Enter Your Password' });
       }
-      
+
       var socket = io('ws://18.220.211.136:5000')
       socket.on('connect', function() {
-          socket.emit('json', {username: evt.target[0].value,
-                               passwrod: evt.target[1].value});
+          socket.emit('json', {command: "login",
+                              username: evt.target[0].value,
+                              password: evt.target[1].value});
       });
     }
   

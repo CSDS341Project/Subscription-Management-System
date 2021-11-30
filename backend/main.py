@@ -17,10 +17,11 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 
 #Log into DBMS with account. If true, login successful and HTML can change
 #If can't log in, indicate with false
-def login():
+def login(json):
     global mycursor
     global username
     global mydb
+
     if CLI:
         username = input("Username: ")
         passwrd = input("Password: ")
@@ -38,19 +39,24 @@ def login():
         return True
 
     else:
-        username = request.form['username']
-        passwrd = request.form['password']
+        username = json['username']
+        passwrd = json['password']
         try:
             mydb = mysql.connector.connect(
                 user=username,
                 password=passwrd,
-                database="test" 
+                database="test"
             )
-        except Exception:
-            emit('message', {'login': 'failed'})  
+        except Exception as ex:
+            print(ex)
+            emit('message', {'login': 'failed'})
             return False
+
         mycursor = mydb.cursor()
+        print("here")
+        socketio.emit('message', {'login': 'successful'})
         return True
+
 
 #get all subscriptions
 def getAll():
@@ -146,7 +152,10 @@ def executeCommand(command, args):
 
 @socketio.on('json')
 def handleRemoteMessage(json):
-    print(str(json))
+    command = json['command']
+    print(command)
+    if command == 'login':
+        login(json)
 
 
 if __name__ == '__main__':
