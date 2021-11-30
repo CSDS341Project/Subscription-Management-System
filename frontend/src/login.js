@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { io } from "socket.io-client";
-
-
+import ws from "./socketConfig"
 
 class LoginPage extends Component {
     constructor() {
@@ -31,12 +29,10 @@ class LoginPage extends Component {
         return this.setState({ er: 'Please Enter Your Password' });
       }
 
-      var socket = io('ws://18.220.211.136:5000')
-      socket.on('connect', function() {
-          socket.emit('json', {command: "login",
+      ws.emit('json', {command: "login",
                               username: evt.target[0].value,
                               password: evt.target[1].value});
-      });
+  
     }
   
     handleUserChange(evt) {
