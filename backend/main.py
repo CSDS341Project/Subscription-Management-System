@@ -17,7 +17,8 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 
 #Log into DBMS with account. If true, login successful and HTML can change
 #If can't log in, indicate with false
-def login(json):
+#json=None bc it may not be provided for CLI
+def login(json=None):
     global mycursor
     global username
     global mydb

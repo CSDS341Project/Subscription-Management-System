@@ -5,7 +5,7 @@ import ws from './socketConfig'
 function App() {
   ws.on('message', function(message) {
     if (message['login'] === 'successful') {
-      console.log("Login successful")
+      console.log(message);
     }
     else {
       console.log("Login failed.")
