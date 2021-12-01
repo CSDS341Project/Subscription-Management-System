@@ -8,6 +8,8 @@ CLI = False
 mycursor = None
 username = None
 mydb = None
+subid = 17
+platid = 1
 
 #start backend flask thing
 app = Flask(__name__)
@@ -96,6 +98,89 @@ def getByFrequency(freq):
     except Error as e:
         print(f"The error '{e}' occurred")
 
+def insertSubscription(args):
+    global subid
+    platform_name = 'NULL'
+    platform_id = 'NULL'
+    subscription_type = 'NULL'
+    sb_username = 'NULL'
+    sb_password = 'NULL'
+    email = 'NULL'
+    address_id = 'NULL'
+
+    for x in range(len(args) - 1):
+        if args[x] == '-p':
+            platform_name = args[x + 1]
+            x += 1
+        elif args[x] == '-t':
+            subscription_type = args[x + 1]
+            x += 1
+        elif args[x] == '-u':
+            sb_username = args[x + 1]
+            x += 1
+        elif args[x] == '-p':
+            sb_password = args[x + 1]
+            x += 1
+        elif args[x] == '-e':
+            email = args[x + 1]
+            x += 1
+
+    if platform_name != 'NULL':
+        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = {platform_name}")
+
+        try:
+            mycursor.execute(getplatforms)
+            result = mycursor.fetchall()
+            if len(result) > 0:
+                platform_id = result[0][0]
+            else:
+                platform_id = platid
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
+    print(f"""This is the subscription to be added:
+    Platform name: {platform_name}
+    Subscription type: {subscription_type}
+    Subscription username: {sb_username}
+    Subscription password: {sb_password}
+    Email: {email}
+    """)
+
+    confirm = input("Is this the subscription you would like to add? ('y' for yes, any other key for no)")
+
+    if confirm == 'y' or confirm == 'Y':
+        operation = (f"INSERT INTO Subscription (subscription_id, platform_id, subscription_type, sb_username, sb_password, email, address_id, db_username) VALUES ({subid}, {platform_id}, {subscription_type}, {sb_username}, {sb_password}, {email}, {address_id}, {username})")
+        try:
+            mycursor.execute(operation)
+            print("Your subscription has been added :)")      
+        except Error as e:
+            print(f"The error '{e}' occurred")
+        subid += 1
+
+        if platform_id == platid:
+            hasparentcomp = input("This platform doesn't seem to exist in our database. Do you know which company sells this subscription? ('y' for yes, any other key for no)")
+            if hasparentcomp == 'y' or hasparentcomp == 'Y':
+                parent = input("Great! What's the company?")
+                confirmparent = input(f"Is '{parent}' the correct name? ('y' for yes, any other key for no)")
+                count = 0
+                while (confirmparent != 'y' or confirmparent != 'Y') and count < 3:
+                    parent = input("Okay, please enter a new name:")
+                    confirmparent = input(f"Is '{parent}' the correct name? ('y' for yes, any other key for no)")
+                    count += 1
+            
+            if confirmparent == 'y' or confirmparent == 'Y':
+                addplatform = (f"INSERT INTO Platform (platform_id, name, parent_company) VALUES ({platform_id}, {platform_name}, {parent})")
+                try:
+                    mycursor.execute(addplatform)
+                    print("Great! This platform has also been added :)") 
+                    platid += 1     
+                except Error as e:
+                    print(f"The error '{e}' occurred")
+
+    else:
+        print("Okay, please try the insert command again with the correct information.")
+    
+
 #update subscription by the subscriptions ID
 #params not at thing in Flask, so they'll just be pulled off of the request
 def update():
@@ -146,7 +231,10 @@ def executeCommand(command, args):
             else:
                 print("Please specify a frequency.")
     elif command == 'INSERT':
-        pass #insert logic here, make elifs for any other command
+        if len(args) == 0:
+            print("Additional argument required. Please specify what you would like to insert")
+        elif args[0] == 'SUBSCRIPTION':
+            insertSubscription(args)
     else:
         print("*Error*: Unknown/Unsupported command")
 
