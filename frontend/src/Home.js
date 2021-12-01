@@ -28,13 +28,15 @@ class HomePage extends Component {
         )
       })
     }
+
   
     render() {
       ws.on('message', function(message) {
         let subs = message['subscriptions'];
-        console.log(subs);
-
-      });
+        this.setState({
+          subscriptions: subs
+        })
+      }.bind(this));
       let theme = createTheme()
       theme = responsiveFontSizes(theme);
       return (
