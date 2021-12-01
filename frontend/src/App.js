@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import LoginPage from './login';
 import HomePage from './Home';
@@ -19,7 +18,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
           <BrowserRouter basename="/">
               <Routes>
                 <Route path="/" element={<LoginPage />} />
