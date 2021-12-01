@@ -31,7 +31,9 @@ class HomePage extends Component {
   
     render() {
       ws.on('message', function(message) {
-        console.log(message)
+        let subs = message['subscriptions'];
+        console.log(subs);
+
       });
       let theme = createTheme()
       theme = responsiveFontSizes(theme);
