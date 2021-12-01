@@ -159,6 +159,10 @@ def executeCommand(command, args):
     else:
         print("*Error*: Unknown/Unsupported command")
 
+#Query DB and get as much data as possible given a platform name
+#Get all subscriptions, invoices, etc.
+def getDataOf(platform):
+    socketio.emit('platform_data', platform)
 
 @socketio.on('json')
 def handleRemoteMessage(json):
@@ -169,6 +173,9 @@ def handleRemoteMessage(json):
     elif command == 'SHOW':
         if json['args'] == "None":
             getAll()
+        elif json['args'] == "INFO":
+            print("INFO")
+            getDataOf(json['data'])
 
 
 
