@@ -119,20 +119,35 @@ def insertSubscription(args):
 
     for x in range(len(args) - 1):
         if args[x] == '-p':
-            platform_name = args[x + 1]
-            x += 1
+            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+                if(platform_name == 'NULL'):
+                    platform_name = ''
+                platform_name += args[x + 1]
+                x += 1
         elif args[x] == '-t':
-            subscription_type = args[x + 1]
-            x += 1
+            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+                if(subscription_type == 'NULL'):
+                    subscription_type = ''
+                subscription_type += args[x + 1]
+                x += 1
         elif args[x] == '-u':
-            sb_username = args[x + 1]
-            x += 1
-        elif args[x] == '-p':
-            sb_password = args[x + 1]
-            x += 1
+            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+                if(sb_username == 'NULL'):
+                    sb_username = ''
+                sb_username += args[x + 1]
+                x += 1
+        elif args[x] == '-pw':
+            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+                if(sb_password == 'NULL'):
+                    sb_password = ''
+                sb_password += args[x + 1]
+                x += 1
         elif args[x] == '-e':
-            email = args[x + 1]
-            x += 1
+            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+                if(email == 'NULL'):
+                    email = ''
+                email += args[x + 1]
+                x += 1
 
     if platform_name != 'NULL':
         getplatforms = (f"SELECT platform_id FROM Platform WHERE name = {platform_name}")
