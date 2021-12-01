@@ -133,6 +133,14 @@ def insert(json=None):
     else:
         print("insertion would happen")
 
+def remove(json=None):
+    operation = None #TODO
+    if CLI:
+        pass
+    else:
+        if (json['platform'] != 'N/A'):
+            el = json['platform']
+            print(f"would've deleted {el} from DB")
 
 
 
@@ -190,6 +198,8 @@ def handleRemoteMessage(json):
     elif command == "INSERT":
         insert(json)
 
+    elif command == "REMOVE":
+        remove(json)
 
 
 if __name__ == '__main__':

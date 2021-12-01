@@ -21,7 +21,8 @@ class HomePage extends Component {
          { id: 1, name: 'test_subscription' }
        ],
        columns: ['name'],
-       info: "Click on a subscription for more data"
+       info: "Click on a subscription for more data",
+       selectedRow: "N/A"
       };
     }
 
@@ -40,7 +41,11 @@ class HomePage extends Component {
     isShowPopup = (status) => {
       this.setState({ showPopup: status });  
     }
-
+    
+    remove() {
+      ws.emit('json', {command: "REMOVE",
+                       platform: this.state.selectedRow[0]})
+    }
   
     render() {
 
@@ -66,6 +71,9 @@ class HomePage extends Component {
         const selected = res.map(item => {
           return item.name
         });
+        this.setState({
+          selectedRow: selected
+        })
           ws.emit('json', {command: 'SHOW',
                            args: 'INFO',
                            data: selected});
@@ -84,14 +92,15 @@ class HomePage extends Component {
         selectableRowsHideCheckboxes: true,
         expandableRowsOnClick: true,
         selectableRowsOnClick: true,
-        onRowSelectionChange
+        onRowSelectionChange,
+
       }
       return (
         <><div>
           <ThemeProvider theme={theme}>
             <Stack spacing={36} direction="row">
               <Button variant="contained" onClick={() => {this.isShowPopup(true)}}>Insert</Button>
-              <Button variant="contained">Delete</Button>
+              <Button variant="contained" onClick={() => (this.remove())}>Delete</Button>
             </Stack>
             <MUIDataTable 
               title={"Subscriptions"}
