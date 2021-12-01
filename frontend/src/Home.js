@@ -1,9 +1,12 @@
-import React, {Component} from "react";
+import React, {Component } from "react";
 import MUIDataTable from "mui-datatables"
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import Box from "@mui/material/Box"
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import ws from "./socketConfig"
+import ModalPopup from './popup'
 
 class HomePage extends Component {
     constructor(props) {
@@ -13,6 +16,7 @@ class HomePage extends Component {
                       args: "None"});
 
       this.state = {
+        showPopup: false,
        subscriptions: [
          { id: 1, name: 'test_subscription' }
        ],
@@ -31,6 +35,10 @@ class HomePage extends Component {
           </tr>
         )
       })
+    }
+
+    isShowPopup = (status) => {
+      this.setState({ showPopup: status });  
     }
 
   
@@ -81,13 +89,23 @@ class HomePage extends Component {
       return (
         <><div>
           <ThemeProvider theme={theme}>
+            <Stack spacing={36} direction="row">
+              <Button variant="contained" onClick={() => {this.isShowPopup(true)}}>Insert</Button>
+              <Button variant="contained">Delete</Button>
+            </Stack>
             <MUIDataTable 
               title={"Subscriptions"}
               data={this.state.subscriptions}
               columns={this.state.columns}
               options={options} />
           </ThemeProvider>
-        </div><Box
+          <ModalPopup  
+            showModalPopup={this.state.showPopup}  
+            onPopupClose={this.isShowPopup}  
+        ></ModalPopup> 
+        </div>
+        
+        <Box
           sx={{
             width: 500,
             maxWidth: '100%',
