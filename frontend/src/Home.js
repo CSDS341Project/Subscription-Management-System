@@ -7,8 +7,10 @@ import ws from "./socketConfig"
 class HomePage extends Component {
     constructor(props) {
       super();
+      //on open, send message to show everything
       ws.emit("json", {command: "SHOW",
-                      args: "None"})
+                      args: "None"});
+
       this.state = {
        subscriptions: [
          { id: 1, name: 'test_subscription' }
@@ -32,10 +34,15 @@ class HomePage extends Component {
   
     render() {
       ws.on('message', function(message) {
-        let subs = message['subscriptions'];
         this.setState({
-          subscriptions: subs
+          subscriptions: []
         })
+        let subs = message['subscriptions'];
+        subs.forEach(function(sub, i) {
+          this.setState({
+            subscriptions: [...this.state.subscriptions, {id: i, name: sub}]
+          })
+        }.bind(this));
       }.bind(this));
       let theme = createTheme()
       theme = responsiveFontSizes(theme);
