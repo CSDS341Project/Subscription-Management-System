@@ -1,0 +1,1 @@
+mv .htaccess ../frontend/build
