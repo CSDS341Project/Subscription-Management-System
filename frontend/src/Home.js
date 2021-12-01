@@ -69,11 +69,11 @@ class HomePage extends Component {
           ws.emit('json', {command: 'SHOW',
                            args: 'INFO',
                            data: selected});
-                           ws.on('platform_data', function(data) {
-                            this.setState({
-                              info: data
-                            });
-                          }.bind(this));
+          ws.on('platform_data', function(data) {
+            this.setState({
+                info: data
+            });
+          }.bind(this));
       }
 
       //setup n stuff

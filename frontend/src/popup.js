@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from 'react';  
 import { Modal } from 'react-bootstrap';  
 import ws from "./socketConfig"
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 //enit this
 class ModalPopup extends Component {  
     constructor(props) {  
         super(props);  
         this.state = {  
-            showModal: false  
+            showModal: false,
+            platform: ""
         };  
     }  
   
@@ -19,6 +22,20 @@ class ModalPopup extends Component {
     handleClose = () => {  
         this.props.onPopupClose(false);  
     }  
+
+    handlePlatformChange = (evt) => {
+        this.setState({
+            platform: evt.target.value
+        })
+    }
+
+    send = (event) => {
+        console.log("here")
+        ws.emit('json', {command: "INSERT",
+                         platform: this.state.platform});
+        this.handleClose();  
+        this.isShowModal(true);
+    }
   
   
     render() {  
@@ -29,14 +46,16 @@ class ModalPopup extends Component {
                     aria-labelledby="contained-modal-title-vcenter"  
                     centered  
                 >   
+                    <form onSubmit={this.send}>
                     <Modal.Body>  
-                        <hr />  
-                        <div className="signUp">  
-                            <p>Platform Name:</p>  
-                            <button type="button" className="link-button" onClick={() => this.isShowModal(true)}> Close</button>
+                        <TextField variant='filled' label='platform' onChange={this.handlePlatformChange}/>
+                        <Button variant="contained" type="submit">Submit</Button>
 
-                        </div>  
                     </Modal.Body>  
+                    </form>
+                    <div className="signUp">  
+                            <Button variant='outlined'  onClick={() => this.isShowModal(true)}> Close</Button>
+                    </div> 
   
                 </Modal >  
             </Fragment >  

@@ -123,9 +123,18 @@ def getWhere():
     pass
 
 
-#Create a new subscription based on properties specified
-def insert():
-    pass
+#Create a new subscription based on properties specified.
+#Add other params, but set their default value to None so it doesn't
+#interfere with web request
+def insert(json=None):
+    operation = None #TODO
+    if CLI:
+        pass
+    else:
+        print("insertion would happen")
+
+
+
 
 
 def getInput():
@@ -170,12 +179,16 @@ def handleRemoteMessage(json):
     print(command)
     if command == 'login':
         login(json)
+
     elif command == 'SHOW':
         if json['args'] == "None":
             getAll()
         elif json['args'] == "INFO":
             print("INFO")
             getDataOf(json['data'])
+
+    elif command == "INSERT":
+        insert(json)
 
 
 
