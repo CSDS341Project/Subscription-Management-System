@@ -4,13 +4,14 @@ import Button from '@mui/material/Button';
 import ws from "./socketConfig"
 
 class LoginPage extends Component {
-    constructor() {
+    constructor(props) {
       super();
       this.state = {
         username: '',
         password: '',
         er: '',
       };
+
   
       this.handleUserChange = this.handleUserChange.bind(this);
       this.handlePassChange = this.handlePassChange.bind(this);
@@ -32,7 +33,7 @@ class LoginPage extends Component {
       ws.emit('json', {command: "login",
                               username: evt.target[0].value,
                               password: evt.target[1].value});
-  
+      
     }
   
     handleUserChange(evt) {
