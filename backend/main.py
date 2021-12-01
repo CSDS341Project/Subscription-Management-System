@@ -62,12 +62,21 @@ def login(json=None):
 #get all subscriptions
 def getAll():
     operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN DB_Account_Information a WHERE db_username = '{username}'")
-    try:
-        mycursor.execute(operation)
-        result = mycursor.fetchall()
-        print(result)
-    except Error as e:
-        print(f"The error '{e}' occurred")
+    if CLI:
+        try:
+            mycursor.execute(operation)
+            result = mycursor.fetchall()
+            print(result)
+        except Error as e:
+            print(f"The error '{e}' occurred")
+    else:
+        try:
+            mycursor.execute(operation)
+            result = mycursor.fetchall()
+            socketio.emit('message', {'subscriptions': result })
+        except Exception as ex:
+            print(ex)
+
 
 def getSubsByCardNum(cardNum):
     operation = (f"SELECT p.name FROM Platform p, Payment_Method pm, Subscription s, hasBillingInfo hb WHERE s.platform_id = p.platform_id AND hb.subscription_id = s.subscription_id AND hb.invoice_id = pm.invoice_id AND pm.card_number= {cardNum} AND s.db_username = '{username}'")
@@ -102,9 +111,9 @@ def update():
     pass
 
 #Get all subscriptions where some properties are true
-#Certainly gonna be the most complex function. 
+#Certainly gonna be the most complex function.
 def getWhere():
-    #Incoming JSON message in form like: 
+    #Incoming JSON message in form like:
     # {
     #   Platform: Any
     #   Payment Method: {card number=1234 5352 5345 6929}
@@ -114,7 +123,7 @@ def getWhere():
     pass
 
 
-#Create a new subscription based on properties specified 
+#Create a new subscription based on properties specified
 def insert():
     pass
 
@@ -125,7 +134,7 @@ def getInput():
         data = input()
         executeCommand(data.split()[0], data.split()[1:])
 
-        
+
 def executeCommand(command, args):
     if command == 'SHOW':
         if len(args) == 0 or args[0] == 'ALL':
@@ -157,6 +166,10 @@ def handleRemoteMessage(json):
     print(command)
     if command == 'login':
         login(json)
+    elif command == 'SHOW':
+        if json['args'] == "None":
+            getAll()
+
 
 
 if __name__ == '__main__':

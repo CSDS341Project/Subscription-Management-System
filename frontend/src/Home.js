@@ -2,9 +2,13 @@ import React, {Component} from "react";
 import MUIDataTable from "mui-datatables"
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import ws from "./socketConfig"
+
 class HomePage extends Component {
-    constructor() {
+    constructor(props) {
       super();
+      ws.emit("json", {command: "SHOW",
+                      args: "None"})
       this.state = {
        subscriptions: [
          { id: 1, name: 'test_subscription' }
@@ -26,6 +30,9 @@ class HomePage extends Component {
     }
   
     render() {
+      ws.on('message', function(message) {
+        console.log(message)
+      });
       let theme = createTheme()
       theme = responsiveFontSizes(theme);
       return (

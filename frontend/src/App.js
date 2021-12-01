@@ -3,7 +3,6 @@ import LoginPage from './login';
 import HomePage from './Home';
 import ws from './socketConfig'
 import { BrowserRouter, Route, Routes, } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
     if (message['login'] === 'successful') {
       window.location = "/home"
     }
-    else {
+    else if (message['login'] === 'failed') {
       console.log("Login failed.");
   }
 });
