@@ -15,7 +15,7 @@ class HomePage extends Component {
        subscriptions: [
          { id: 1, name: 'test_subscription' }
        ],
-       columns: ['id', 'name']
+       columns: ['name']
       };
     }
 
@@ -34,9 +34,11 @@ class HomePage extends Component {
   
     render() {
       ws.on('message', function(message) {
+        //whenever a message is received, clear all
         this.setState({
           subscriptions: []
         })
+
         let subs = message['subscriptions'];
         subs.forEach(function(sub, i) {
           this.setState({
@@ -44,15 +46,33 @@ class HomePage extends Component {
           })
         }.bind(this));
       }.bind(this));
+
+      const onRowSelectionChange = (cur, all, rows) => {
+          const res = all.map(item => { return this.state.subscriptions.at(item.index) });
+          const selected = res.map(item => {
+            return item.name
+          });
+          console.log(selected[0]);
+      }
+
+      //setup n stuff
       let theme = createTheme()
       theme = responsiveFontSizes(theme);
+      const options = {
+        selectableRows: 'single',
+        selectableRowsHideCheckboxes: true,
+        expandableRowsOnClick: true,
+        selectableRowsOnClick: true,
+        onRowSelectionChange
+      }
       return (
         <div>
           <ThemeProvider theme={theme}>
-          <MUIDataTable
+          <MUIDataTable 
             title={"Subscriptions"}
             data={this.state.subscriptions}
             columns={this.state.columns}
+            options={options}
           />
           </ThemeProvider>
         </div>
