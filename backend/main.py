@@ -122,7 +122,7 @@ def insertSubscription(args):
         try:
             mycursor.execute("SELECT max(subscription_id) FROM Subscription")
             result = mycursor.fetchall()
-            subid = result[0][0]
+            subid = result[0][0] + 1
         except Error as e:
             print(f"The error '{e}' occurred")
 
@@ -130,7 +130,7 @@ def insertSubscription(args):
         try:
             mycursor.execute("SELECT max(platform_id) FROM Platform")
             result = mycursor.fetchall()
-            platid = result[0][0]
+            platid = result[0][0] + 1
         except Error as e:
             print(f"The error '{e}' occurred")
 
@@ -182,7 +182,6 @@ def insertSubscription(args):
         try:
             mycursor.execute(getplatforms)
             result = mycursor.fetchall()
-            print(result)
             if len(result) > 0:
                 platform_id = result[0][0]
             else:
@@ -205,10 +204,10 @@ def insertSubscription(args):
         try:
             mycursor.execute(operation)
             mydb.commit()
-            print("Your subscription has been added :)")      
+            print("Your subscription has been added :)")   
+            subid += 1   
         except Error as e:
             print(f"The error '{e}' occurred")
-        subid += 1
 
         if platform_id == platid:
             hasparentcomp = input("This platform doesn't seem to exist in our database. Do you know which company sells this subscription? ('y' for yes, any other key for no)")
@@ -232,6 +231,36 @@ def insertSubscription(args):
 
     else:
         print("Okay, please try the insert command again with the correct information.")
+
+def deleteSubscription(args):
+    print(len(args))
+    if len(args) <= 1:
+        print("Please specify what subscription you would like to delete.")
+    else:
+        platform_name = ""
+        for x in range(1, len(args)):
+            platform_name += args[x]
+            if x < len(args) - 1:
+                platform_name += " "
+        
+        getplatformid = (f"SELECT platform_id FROM Platform WHERE name = '{platform_name}'")
+
+        try:
+            mycursor.execute(getplatformid)
+            result = mycursor.fetchall()
+            if len(result) > 0:
+                platform_id = result[0][0]
+                operation = (f"DELETE FROM Subscription WHERE platform_id = {platform_id}")
+                try:
+                    mycursor.execute(operation)
+                    mydb.commit()
+                    print("Your subscription has been deleted!")      
+                except Error as e:
+                    print(f"The error '{e}' occurred")
+            else:
+                print("Sorry, it seems like you don't have a subscription with that name. Try again with a different platform name.")
+        except Error as e:
+            print(f"The error '{e}' occurred")
     
 
 #update subscription by the subscriptions ID
@@ -305,6 +334,11 @@ def executeCommand(command, args):
             print("Additional argument required. Please specify what you would like to insert")
         elif args[0] == 'SUBSCRIPTION':
             insertSubscription(args)
+    elif command == 'REMOVE':
+        if len(args) == 0:
+            print("Additional argument required. Please specify what you would like to remove")
+        elif args[0] == 'SUBSCRIPTION':
+            deleteSubscription(args)
     else:
         print("*Error*: Unknown/Unsupported command")
 
