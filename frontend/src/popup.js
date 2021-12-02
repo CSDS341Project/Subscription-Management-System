@@ -9,7 +9,13 @@ class ModalPopup extends Component {
         super(props);  
         this.state = {  
             showModal: false,
-            platform: ""
+            subscription_id: "",
+            platform: "",
+            next_amount_due: 0,
+            card_num: "",
+            email: "",
+            username: "",
+            password: ""
         };  
     }  
   
@@ -23,9 +29,47 @@ class ModalPopup extends Component {
         this.props.onPopupClose(false);  
     }  
 
+    handleIDChange = (evt) => {
+        this.setState({
+            subscription_id: evt.target.value,
+        })
+    }
+
     handlePlatformChange = (evt) => {
         this.setState({
             platform: evt.target.value
+        })
+    }
+
+    handleAmountChange = (evt) => {
+        this.setState({
+            card_num: evt.target.value,
+        })   
+    }
+
+    handleCardChange = (evt) => {
+        this.setState({
+            card_num: evt.target.value,
+
+        })
+    }
+
+    handleEmailChange = (evt) => {
+        this.setState({
+            email: evt.target.value,
+
+        })
+    }
+
+    handleUsernameChange = (evt) => {
+        this.setState({
+            username: evt.target.value,
+        })
+    }
+
+    handlePasswordChange = (evt) => {
+        this.setState({
+            password: evt.target.value
         })
     }
 
@@ -48,7 +92,19 @@ class ModalPopup extends Component {
                 >   
                     <form onSubmit={this.send}>
                     <Modal.Body>  
+                        <TextField variant='filled' label='subscription ID' onChange={this.handleIDChange}/>
                         <TextField variant='filled' label='platform' onChange={this.handlePlatformChange}/>
+                        <TextField variant='filled' label='Next Amount Due' onChange={this.handleAmountChange}/>
+                        <TextField variant='filled' label='Card Number' onChange={this.handleCardChange}/>
+                        <TextField variant='filled' label='Email' onChange={this.handleEmailChange}/>
+                        <TextField variant='filled' label='Username' onChange={this.handleUsernameChange}/>
+                        <TextField variant='filled' label='Password' onChange={this.handlePasswordChange}/>
+
+
+
+
+
+
                         <Button variant="contained" type="submit">Submit</Button>
 
                     </Modal.Body>  
