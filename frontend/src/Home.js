@@ -177,6 +177,10 @@ class HomePage extends Component {
         }
       },
       {
+        name: 'platform',
+        filter: true
+      },
+      {
         name: 'next_amount_due',
         filter: true,
         options: {
