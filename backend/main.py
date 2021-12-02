@@ -79,6 +79,15 @@ def getAll():
         except Exception as ex:
             print(ex)
 
+def getDataBySubID(sid):
+    operation = (f"SELECT subscription_id, name, amount_due, billing_freq, card_number, email, sb_username, sb_password FROM Subscription NATURAL JOIN Invoice NATURAL JOIN Platform NATURAL JOIN Payment_Method WHERE subscription_id = {sid}")
+    try:
+        mycursor.execute(operation)
+        result = mycursor.fetchall()
+        socketio.emit('verbose_message', {'subscriptions': result})
+    except Exception as ex:
+        print(ex)
+
 
 def getSubsByCardNum(cardNum):
     operation = (f"SELECT p.name FROM Platform p, Payment_Method pm, Subscription s, hasBillingInfo hb WHERE s.platform_id = p.platform_id AND hb.subscription_id = s.subscription_id AND hb.invoice_id = pm.invoice_id AND pm.card_number= {cardNum} AND s.db_username = '{username}'")
@@ -360,6 +369,8 @@ def handleRemoteMessage(json):
         elif json['args'] == "INFO":
             print("INFO")
             getDataOf(json['data'])
+        elif json['args'] == "VERBOSE":
+            getDataBySubID(json['data'])
 
     elif command == "INSERT":
         insert(json)
