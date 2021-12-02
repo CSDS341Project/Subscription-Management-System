@@ -109,6 +109,7 @@ def getByFrequency(freq):
 
 def insertSubscription(args):
     global subid
+    global platid
     platform_name = 'NULL'
     platform_id = 'NULL'
     subscription_type = 'NULL'
@@ -119,42 +120,53 @@ def insertSubscription(args):
 
     for x in range(len(args) - 1):
         if args[x] == '-p':
-            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+            while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
                 if(platform_name == 'NULL'):
-                    platform_name = ''
-                platform_name += args[x + 1]
+                    platform_name = "'"
+                platform_name += args[x + 1] + " "
                 x += 1
+            if platform_name != 'NULL':
+                platform_name = platform_name[:-1] + "'"
         elif args[x] == '-t':
-            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+            while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
                 if(subscription_type == 'NULL'):
-                    subscription_type = ''
-                subscription_type += args[x + 1]
+                    subscription_type = "'"
+                subscription_type += args[x + 1] + " "
                 x += 1
+            if subscription_type != 'NULL':
+                subscription_type = subscription_type[:-1] + "'"
         elif args[x] == '-u':
-            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+            while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
                 if(sb_username == 'NULL'):
-                    sb_username = ''
-                sb_username += args[x + 1]
+                    sb_username = "'"
+                sb_username += args[x + 1] + " "
                 x += 1
+            if sb_username != 'NULL':
+                sb_username = sb_username[:-1] + "'"
         elif args[x] == '-pw':
-            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+            while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
                 if(sb_password == 'NULL'):
-                    sb_password = ''
-                sb_password += args[x + 1]
+                    sb_password = "'"
+                sb_password += args[x + 1] + " "
                 x += 1
+            if sb_password != 'NULL':
+                sb_password = sb_password[:-1] + "'"
         elif args[x] == '-e':
-            while args[x + 1] != '-p' or args[x + 1] != '-t' or args[x + 1] != '-u' or args[x + 1] != '-pw' or args[x + 1] != '-e':
+            while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
                 if(email == 'NULL'):
-                    email = ''
-                email += args[x + 1]
+                    email = "'"
+                email += args[x + 1] + " "
                 x += 1
+            if email != 'NULL':
+                email = email[:-1] + "'"
 
     if platform_name != 'NULL':
-        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = {platform_name}")
+        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = '{platform_name}'")
 
         try:
             mycursor.execute(getplatforms)
             result = mycursor.fetchall()
+            print(result)
             if len(result) > 0:
                 platform_id = result[0][0]
             else:
@@ -173,9 +185,10 @@ def insertSubscription(args):
     confirm = input("Is this the subscription you would like to add? ('y' for yes, any other key for no)")
 
     if confirm == 'y' or confirm == 'Y':
-        operation = (f"INSERT INTO Subscription (subscription_id, platform_id, subscription_type, sb_username, sb_password, email, address_id, db_username) VALUES ({subid}, {platform_id}, {subscription_type}, {sb_username}, {sb_password}, {email}, {address_id}, {username})")
+        operation = (f"INSERT INTO Subscription (subscription_id, platform_id, subscription_type, sb_username, sb_password, email, address_id, db_username) VALUES ({subid}, {platform_id}, {subscription_type}, {sb_username}, {sb_password}, {email}, {address_id}, '{username}')")
         try:
             mycursor.execute(operation)
+            mydb.commit()
             print("Your subscription has been added :)")      
         except Error as e:
             print(f"The error '{e}' occurred")
