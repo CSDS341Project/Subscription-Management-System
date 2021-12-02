@@ -63,7 +63,7 @@ def login(json=None):
 
 #get all subscriptions
 def getAll():
-    operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN DB_Account_Information a WHERE db_username = '{username}'")
+    operation = (f"SELECT subscription_id, name, amount_due, billing_freq, card_number, email, sb_username, sb_password FROM Subscription NATURAL JOIN Invoice NATURAL JOIN Platform NATURAL JOIN Payment_Method")
     if CLI:
         try:
             mycursor.execute(operation)

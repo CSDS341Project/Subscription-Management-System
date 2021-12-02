@@ -67,13 +67,14 @@ class HomePage extends Component {
         let subs = message['subscriptions'];
         subs.forEach(function(sub, i) {
           this.setState({
-            subscriptions: [...this.state.subscriptions, {id: i, 
-                                                          platform: sub, 
-                                                          next_amount_due: Math.floor(100 * Math.random()), 
-                                                          card_num: "",
-                                                          email: "", 
-                                                          username: "",
-                                                          password: ""}]
+            subscriptions: [...this.state.subscriptions, {id: sub[0], 
+                                                          platform: sub[1], 
+                                                          next_amount_due: sub[2],
+                                                          billing_freq: sub[3],
+                                                          card_num: sub[4],
+                                                          email: sub[5], 
+                                                          username: sub[6],
+                                                          password: sub[7]}]
           })
         }.bind(this));
       }.bind(this));
@@ -176,18 +177,6 @@ class HomePage extends Component {
         }
       },
       {
-        name: 'platform',
-        filter: true,
-        filterType: 'checkbox'
-      },
-      {
-        name: 'email',
-        filter: true,
-        options: {
-        filterType: 'textField'
-        }
-      },
-      {
         name: 'next_amount_due',
         filter: true,
         options: {
@@ -259,6 +248,9 @@ class HomePage extends Component {
         }
         },
         print: false
+      },
+      {
+        name: 'billing_freq'
       },
       {
         name: "card_num",
