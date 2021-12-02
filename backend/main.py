@@ -8,8 +8,8 @@ CLI = False
 mycursor = None
 username = None
 mydb = None
-subid = 17
-platid = 1
+subid = 0
+platid = 0
 
 #start backend flask thing
 app = Flask(__name__)
@@ -118,6 +118,22 @@ def insertSubscription(args):
     email = 'NULL'
     address_id = 'NULL'
 
+    if subid == 0:
+        try:
+            mycursor.execute("SELECT max(subscription_id) FROM Subscription")
+            result = mycursor.fetchall()
+            subid = result[0][0]
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
+    if platid == 0:
+        try:
+            mycursor.execute("SELECT max(platform_id) FROM Platform")
+            result = mycursor.fetchall()
+            platid = result[0][0]
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
     for x in range(len(args) - 1):
         if args[x] == '-p':
             while x < len(args) - 1 and args[x + 1] != '-p' and args[x + 1] != '-t' and args[x + 1] != '-u' and args[x + 1] != '-pw' and args[x + 1] != '-e':
@@ -161,7 +177,7 @@ def insertSubscription(args):
                 email = email[:-1] + "'"
 
     if platform_name != 'NULL':
-        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = '{platform_name}'")
+        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = {platform_name}")
 
         try:
             mycursor.execute(getplatforms)
