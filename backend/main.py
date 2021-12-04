@@ -90,7 +90,7 @@ def getDataBySubID(sid):
 
 
 def getSubsByCardNum(cardNum):
-    operation = (f"SELECT p.name FROM Platform p, Payment_Method pm, Subscription s, hasBillingInfo hb WHERE s.platform_id = p.platform_id AND hb.subscription_id = s.subscription_id AND hb.invoice_id = pm.invoice_id AND pm.card_number= {cardNum} AND s.db_username = '{username}'")
+    operation = (f"SELECT p.name FROM Platform p NATURAL JOIN Subscription s NATURAL JOIN Invoice i WHERE i.card_number= {cardNum} AND s.db_username = '{username}'")
     try:
         mycursor.execute(operation)
         result = mycursor.fetchall()
