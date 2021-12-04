@@ -343,11 +343,15 @@ def executeCommand(command, args):
             print("Additional argument required. Please specify what you would like to insert")
         elif args[0] == 'SUBSCRIPTION':
             insertSubscription(args)
+        else:
+            print("Not a valid insert command. Please try again.")
     elif command == 'REMOVE':
         if len(args) == 0:
             print("Additional argument required. Please specify what you would like to remove")
         elif args[0] == 'SUBSCRIPTION':
             deleteSubscription(args)
+        else:
+            print("Not a valid remove command. Please try again.")
     else:
         print("*Error*: Unknown/Unsupported command")
 
