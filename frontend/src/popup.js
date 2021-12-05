@@ -76,7 +76,11 @@ class ModalPopup extends Component {
     send = (event) => {
         console.log("here")
         ws.emit('json', {command: "INSERT",
-                         platform: this.state.platform});
+                         platform: this.state.platform,
+                         username: this.state.username,
+                         password: this.state.password,
+                         email: this.state.email,
+                        });
         this.handleClose();  
         this.isShowModal(true);
     }
