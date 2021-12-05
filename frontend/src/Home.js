@@ -35,7 +35,7 @@ class HomePage extends Component {
     }
 
     renderData() {
-      return this.state.subscriptions.map((item, index) => {
+      return this.state.subscriptions.map((item, i) => {
         const { id, platform } = item;
         return (
           <tr key={id}>
@@ -88,7 +88,7 @@ class HomePage extends Component {
         });
           ws.emit('json', {command: 'SHOW',
                            args: 'INFO',
-                           data: selected});
+                           data: "None"});
           ws.on('platform_data', function(data) {
             this.setState({
                 info: data
@@ -117,15 +117,15 @@ class HomePage extends Component {
             }
             return [];
           },
-          update: (filterList, filterPos, index) => {
-            console.log('customFilterListOnDelete: ', filterList, filterPos, index);
+          update: (filterList, pos, i) => {
+            console.log('customFilterListOnDelete: ', filterList, pos, i);
 
-            if (filterPos === 0) {
-              filterList[index].splice(filterPos, 1, '');
-            } else if (filterPos === 1) {
-              filterList[index].splice(filterPos, 1);
-            } else if (filterPos === -1) {
-              filterList[index] = [];
+            if (pos === 0) {
+              filterList[i].splice(pos, 1, '');
+            } else if (pos === 1) {
+              filterList[i].splice(pos, 1);
+            } else if (pos === -1) {
+              filterList[i] = [];
             }
 
             return filterList;
@@ -133,36 +133,36 @@ class HomePage extends Component {
         },
         filterOptions: {
           names: ['id'],
-          logic(id, filters) {
+          logic(id, f) {
             //fix
-            if (filters[0] && filters[1]) {
-              return id < filters[0] || id > filters[1];
-            } else if (filters[0]) {
-              return id < filters[0];
-            } else if (filters[1]) {
-              return id > filters[1];
+            if (f[0] && f[1]) {
+              return id < f[0] || id > f[1];
+            } else if (f[0]) {
+              return id < f[0];
+            } else if (f[1]) {
+              return id > f[1];
             }
             return false;
           },
-          display: (filterList, onChange, index, column) => (
+          display: (filterList, onChange, i, c) => (
             <div>
               <FormLabel>ID Number</FormLabel>
               <FormGroup row>
                 <TextField
                   label='min'
-                  value={filterList[index][0] || ''}
+                  value={filterList[i][0] || ''}
                   onChange={event => {
-                    filterList[index][0] = event.target.value;
-                    onChange(filterList[index], index, column);
+                    filterList[i][0] = event.target.value;
+                    onChange(filterList[i], i, c);
                   }}
                   style={{ width: '45%', marginRight: '5%' }}
                 />
                 <TextField
                   label='max'
-                  value={filterList[index][1] || ''}
+                  value={filterList[i][1] || ''}
                   onChange={event => {
-                    filterList[index][1] = event.target.value;
-                    onChange(filterList[index], index, column);
+                    filterList[i][1] = event.target.value;
+                    onChange(filterList[i], i, c);
                   }}
                   style={{ width: '45%' }}
                 />
@@ -195,51 +195,50 @@ class HomePage extends Component {
             }
             return [];
           },
-          update: (filterList, filterPos, index) => {
-            console.log('customFilterListOnDelete: ', filterList, filterPos, index);
+          update: (list, pos, i) => {
 
-            if (filterPos === 0) {
-              filterList[index].splice(filterPos, 1, '');
-            } else if (filterPos === 1) {
-              filterList[index].splice(filterPos, 1);
-            } else if (filterPos === -1) {
-              filterList[index] = [];
+            if (pos === 0) {
+              list[i].splice(pos, 1, '');
+            } else if (pos === 1) {
+              list[i].splice(pos, 1);
+            } else if (pos === -1) {
+              list[i] = [];
             }
-            return filterList;
+            return list;
           },
         },
         filterOptions: {
           names: ['next_amount_due'],
-          logic(id, filters) {
+          logic(id, f) {
             //fix
-            if (filters[0] && filters[1]) {
-              return id < filters[0] || id > filters[1];
-            } else if (filters[0]) {
-              return id < filters[0];
-            } else if (filters[1]) {
-              return id > filters[1];
+            if (f[0] && f[1]) {
+              return id < f[0] || id > f[1];
+            } else if (f[0]) {
+              return id < f[0];
+            } else if (f[1]) {
+              return id > f[1];
             }
             return false;
           },
-          display: (filterList, onChange, index, column) => (
+          display: (filterList, onChange, i, c) => (
             <div>
               <FormLabel>Next Amount Due</FormLabel>
               <FormGroup row>
                 <TextField
                   label='min'
-                  value={filterList[index][0] || ''}
+                  value={filterList[i][0] || ''}
                   onChange={event => {
-                    filterList[index][0] = event.target.value;
-                    onChange(filterList[index], index, column);
+                    filterList[i][0] = event.target.value;
+                    onChange(filterList[i], i, c);
                   }}
                   style={{ width: '45%', marginRight: '5%' }}
                 />
                 <TextField
                   label='max'
-                  value={filterList[index][1] || ''}
+                  value={filterList[i][1] || ''}
                   onChange={event => {
-                    filterList[index][1] = event.target.value;
-                    onChange(filterList[index], index, column);
+                    filterList[i][1] = event.target.value;
+                    onChange(filterList[i], i, c);
                   }}
                   style={{ width: '45%' }}
                 />
