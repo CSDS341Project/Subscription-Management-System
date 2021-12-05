@@ -52,7 +52,7 @@ class HomePage extends Component {
     
     remove() {
       ws.emit('json', {command: "REMOVE",
-                       platform: this.state.selectedRow[6]})
+                       platform: this.state.selectedRow})
     }
   
     render() {
@@ -109,9 +109,9 @@ class HomePage extends Component {
         filterType: 'custom',
         customFilterListOptions: {
           render: v => {
-            if (v[0] && v[1] && this.state.ageFilterChecked) {
+            if (v[0] && v[1]) {
               return [`Min ID: ${v[0]}`, `Max ID: ${v[1]}`];
-            } else if (v[0] && v[1] && !this.state.ageFilterChecked) {
+            } else if (v[0] && v[1]) {
               return `Min ID: ${v[0]}, Max ID: ${v[1]}`;
             } else if (v[0]) {
               return `Min ID: ${v[0]}`;
