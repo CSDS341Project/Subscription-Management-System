@@ -75,6 +75,7 @@ def getAll():
         try:
             mycursor.execute(operation)
             result = mycursor.fetchall()
+            print("here")
             socketio.emit('message', {'subscriptions': result })
         except Exception as ex:
             print(ex)
@@ -353,6 +354,7 @@ def remove(json=None):
                     print("Sorry, it seems like you don't have a subscription with that name. Try again with a different platform name.")
             except Error as e:
                 print(f"The error '{e}' occurred")
+        getAll()
 
 
 
