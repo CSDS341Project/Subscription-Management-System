@@ -84,7 +84,7 @@ class HomePage extends Component {
       const onRowSelectionChange = (cur, all, rows) => {
         const res = all.map(item => { return this.state.subscriptions.at(item.index) });
         const selected = res.map(item => {
-          return item.platform
+          return item.password
         });
         this.setState({
           selectedRow: selected
