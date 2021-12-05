@@ -3,7 +3,6 @@ import { Modal } from 'react-bootstrap';
 import ws from "./socketConfig"
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-//enit this
 class ModalPopup extends Component {  
     constructor(props) {  
         super(props);  
@@ -19,7 +18,7 @@ class ModalPopup extends Component {
         };  
     }  
   
-    isShowModal = (status) => {  
+    showingModal = (status) => {  
         this.handleClose();  
         this.setState({ showModal: status });  
     }  
@@ -82,7 +81,7 @@ class ModalPopup extends Component {
                          email: this.state.email,
                         });
         this.handleClose();  
-        this.isShowModal(true);
+        this.showingModal(true);
     }
   
   
@@ -103,18 +102,11 @@ class ModalPopup extends Component {
                         <TextField variant='filled' label='Email' onChange={this.handleEmailChange}/>
                         <TextField variant='filled' label='Username' onChange={this.handleUsernameChange}/>
                         <TextField variant='filled' label='Password' onChange={this.handlePasswordChange}/>
-
-
-
-
-
-
                         <Button variant="contained" type="submit">Submit</Button>
-
                     </Modal.Body>  
                     </form>
                     <div className="signUp">  
-                            <Button variant='outlined'  onClick={() => this.isShowModal(true)}> Close</Button>
+                            <Button variant='outlined'  onClick={() => this.showingModal(true)}> Close</Button>
                     </div> 
   
                 </Modal >  
