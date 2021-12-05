@@ -35,7 +35,7 @@ class HomePage extends Component {
     }
 
     renderData() {
-      return this.state.subscriptions.map((item, i) => {
+      return this.state.subscriptions.map((item, index) => {
         const { id, platform } = item;
         return (
           <tr key={id}>
@@ -51,7 +51,8 @@ class HomePage extends Component {
     }
     
     remove() {
-      ws.emit('json', {command: "REMOVE" })
+      ws.emit('json', {command: "REMOVE",
+                       platform: this.state.selectedRow[0]})
     }
   
     render() {
@@ -80,14 +81,17 @@ class HomePage extends Component {
 
       //receive data about platform data
 
-      const onRowClick = (rowData, rowMeta) => {
-        console.log(rowData, rowMeta)
-        this.setState({
-          selectedRow: rowData
+      const onRowSelectionChange = (cur, all, rows) => {
+        const res = all.map(item => { return this.state.subscriptions.at(item.index) });
+        const selected = res.map(item => {
+          return item.platform
         });
+        this.setState({
+          selectedRow: selected
+        })
           ws.emit('json', {command: 'SHOW',
                            args: 'INFO',
-                           data: "None"});
+                           data: selected});
           ws.on('platform_data', function(data) {
             this.setState({
                 info: data
@@ -105,9 +109,9 @@ class HomePage extends Component {
         filterType: 'custom',
         customFilterListOptions: {
           render: v => {
-            if (v[0] && v[1]) {
+            if (v[0] && v[1] && this.state.ageFilterChecked) {
               return [`Min ID: ${v[0]}`, `Max ID: ${v[1]}`];
-            } else if (v[0] && v[1]) {
+            } else if (v[0] && v[1] && !this.state.ageFilterChecked) {
               return `Min ID: ${v[0]}, Max ID: ${v[1]}`;
             } else if (v[0]) {
               return `Min ID: ${v[0]}`;
@@ -116,15 +120,15 @@ class HomePage extends Component {
             }
             return [];
           },
-          update: (filterList, pos, i) => {
-            console.log('customFilterListOnDelete: ', filterList, pos, i);
+          update: (filterList, filterPos, index) => {
+            console.log('customFilterListOnDelete: ', filterList, filterPos, index);
 
-            if (pos === 0) {
-              filterList[i].splice(pos, 1, '');
-            } else if (pos === 1) {
-              filterList[i].splice(pos, 1);
-            } else if (pos === -1) {
-              filterList[i] = [];
+            if (filterPos === 0) {
+              filterList[index].splice(filterPos, 1, '');
+            } else if (filterPos === 1) {
+              filterList[index].splice(filterPos, 1);
+            } else if (filterPos === -1) {
+              filterList[index] = [];
             }
 
             return filterList;
@@ -132,36 +136,36 @@ class HomePage extends Component {
         },
         filterOptions: {
           names: ['id'],
-          logic(id, f) {
+          logic(id, filters) {
             //fix
-            if (f[0] && f[1]) {
-              return id < f[0] || id > f[1];
-            } else if (f[0]) {
-              return id < f[0];
-            } else if (f[1]) {
-              return id > f[1];
+            if (filters[0] && filters[1]) {
+              return id < filters[0] || id > filters[1];
+            } else if (filters[0]) {
+              return id < filters[0];
+            } else if (filters[1]) {
+              return id > filters[1];
             }
             return false;
           },
-          display: (filterList, onChange, i, c) => (
+          display: (filterList, onChange, index, column) => (
             <div>
               <FormLabel>ID Number</FormLabel>
               <FormGroup row>
                 <TextField
                   label='min'
-                  value={filterList[i][0] || ''}
+                  value={filterList[index][0] || ''}
                   onChange={event => {
-                    filterList[i][0] = event.target.value;
-                    onChange(filterList[i], i, c);
+                    filterList[index][0] = event.target.value;
+                    onChange(filterList[index], index, column);
                   }}
                   style={{ width: '45%', marginRight: '5%' }}
                 />
                 <TextField
                   label='max'
-                  value={filterList[i][1] || ''}
+                  value={filterList[index][1] || ''}
                   onChange={event => {
-                    filterList[i][1] = event.target.value;
-                    onChange(filterList[i], i, c);
+                    filterList[index][1] = event.target.value;
+                    onChange(filterList[index], index, column);
                   }}
                   style={{ width: '45%' }}
                 />
@@ -194,50 +198,51 @@ class HomePage extends Component {
             }
             return [];
           },
-          update: (list, pos, i) => {
+          update: (filterList, filterPos, index) => {
+            console.log('customFilterListOnDelete: ', filterList, filterPos, index);
 
-            if (pos === 0) {
-              list[i].splice(pos, 1, '');
-            } else if (pos === 1) {
-              list[i].splice(pos, 1);
-            } else if (pos === -1) {
-              list[i] = [];
+            if (filterPos === 0) {
+              filterList[index].splice(filterPos, 1, '');
+            } else if (filterPos === 1) {
+              filterList[index].splice(filterPos, 1);
+            } else if (filterPos === -1) {
+              filterList[index] = [];
             }
-            return list;
+            return filterList;
           },
         },
         filterOptions: {
           names: ['next_amount_due'],
-          logic(id, f) {
+          logic(id, filters) {
             //fix
-            if (f[0] && f[1]) {
-              return id < f[0] || id > f[1];
-            } else if (f[0]) {
-              return id < f[0];
-            } else if (f[1]) {
-              return id > f[1];
+            if (filters[0] && filters[1]) {
+              return id < filters[0] || id > filters[1];
+            } else if (filters[0]) {
+              return id < filters[0];
+            } else if (filters[1]) {
+              return id > filters[1];
             }
             return false;
           },
-          display: (filterList, onChange, i, c) => (
+          display: (filterList, onChange, index, column) => (
             <div>
               <FormLabel>Next Amount Due</FormLabel>
               <FormGroup row>
                 <TextField
                   label='min'
-                  value={filterList[i][0] || ''}
+                  value={filterList[index][0] || ''}
                   onChange={event => {
-                    filterList[i][0] = event.target.value;
-                    onChange(filterList[i], i, c);
+                    filterList[index][0] = event.target.value;
+                    onChange(filterList[index], index, column);
                   }}
                   style={{ width: '45%', marginRight: '5%' }}
                 />
                 <TextField
                   label='max'
-                  value={filterList[i][1] || ''}
+                  value={filterList[index][1] || ''}
                   onChange={event => {
-                    filterList[i][1] = event.target.value;
-                    onChange(filterList[i], i, c);
+                    filterList[index][1] = event.target.value;
+                    onChange(filterList[index], index, column);
                   }}
                   style={{ width: '45%' }}
                 />
@@ -288,7 +293,7 @@ class HomePage extends Component {
         selectableRowsOnClick: true,
         selectToolbarPlacement: 'none',
         onRowsDelete: function() { return false },
-        onRowClick,
+        onRowSelectionChange,
       }
       return (
         <><div>
