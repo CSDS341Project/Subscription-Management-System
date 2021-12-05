@@ -81,16 +81,11 @@ class HomePage extends Component {
 
       //receive data about platform data
 
-      const onRowSelectionChange = (cur, all, rows) => {
-        const res = all.map(item => { 
-             console.log(item);
-            return this.state.subscriptions.at( item.index); });
-        const selected = res.map(item => {
-          return item
-        });
+      const onRowClick = (rowData, rowMeta) => {
+        console.log(rowData, rowMeta)
         this.setState({
-          selectedRow: selected
-        })
+          selectedRow: rowData
+        });
           ws.emit('json', {command: 'SHOW',
                            args: 'INFO',
                            data: selected});
@@ -295,7 +290,7 @@ class HomePage extends Component {
         selectableRowsOnClick: true,
         selectToolbarPlacement: 'none',
         onRowsDelete: function() { return false },
-        onRowSelectionChange,
+        onRowClick,
       }
       return (
         <><div>
