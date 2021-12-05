@@ -294,20 +294,66 @@ def getWhere():
 #Add other params, but set their default value to None so it doesn't
 #interfere with web request
 def insert(json=None):
+    global subid
+    global platid
     operation = None #TODO
     if CLI:
         pass
     else:
-        print("insertion would happen")
+        print(json)
+        if subid == 0:
+            try:
+                mycursor.execute("SELECT max(subscription_id) FROM Subscription")
+                result = mycursor.fetchall()
+                subid = result[0][0] + 1
+            except Error as e:
+                print(f"The error '{e}' occurred")
+
+        if platid == 0:
+            try:
+                mycursor.execute("SELECT max(platform_id) FROM Platform")
+                result = mycursor.fetchall()
+                platid = result[0][0] + 1
+            except Error as e:
+                print(f"The error '{e}' occurred")
+        getplatforms = (f"SELECT platform_id FROM Platform WHERE name = '{json['platform']}'")
+        mycursor.execute(getplatforms)
+        result = mycursor.fetchall()
+        if len(result) > 0:
+            platform_id = result[0][0]
+        else:
+            platform_id = platid
+
+        operation = (f"INSERT INTO Subscription (subscription_id, platform_id, subscription_type, sb_username, sb_password, email, address_id, db_username) VALUES ({subid}, {platform_id}, 'Added Through GUI', '{json['username']}', '{json['password']}', '{json['email']}', NULL, '{username}')")
+        mycursor.execute(operation)
+        mydb.commit()
 
 def remove(json=None):
-    operation = None #TODO
     if CLI:
         pass
     else:
+        print(json)
         if (json['platform'] != 'N/A'):
-            el = json['platform']
-            print(f"would've deleted {el} from DB")
+            platform_name = json['platform']
+            getplatformid = (f"SELECT platform_id FROM Platform WHERE name = '{platform_name}'")
+
+            try:
+                mycursor.execute(getplatformid)
+                result = mycursor.fetchall()
+                if len(result) > 0:
+                    platform_id = result[0][0]
+                    operation = (f"DELETE FROM Subscription WHERE platform_id = {platform_id}")
+                    try:
+                        mycursor.execute(operation)
+                        mydb.commit()
+                        print("Your subscription has been deleted!")      
+                    except Error as e:
+                        print(f"The error '{e}' occurred")
+                else:
+                    print("Sorry, it seems like you don't have a subscription with that name. Try again with a different platform name.")
+            except Error as e:
+                print(f"The error '{e}' occurred")
+
 
 
 
