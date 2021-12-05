@@ -82,7 +82,9 @@ class HomePage extends Component {
       //receive data about platform data
 
       const onRowSelectionChange = (cur, all, rows) => {
-        const res = all.map(item => { return this.state.subscriptions.at(item.index) });
+        const res = all.map(item => { 
+             console.log(item);
+            return this.state.subscriptions.at( item.index); });
         const selected = res.map(item => {
           return item
         });
