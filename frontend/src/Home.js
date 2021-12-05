@@ -51,8 +51,7 @@ class HomePage extends Component {
     }
     
     remove() {
-      ws.emit('json', {command: "REMOVE",
-                       platform: "Hulu"})
+      ws.emit('json', {command: "REMOVE" })
     }
   
     render() {
