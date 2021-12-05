@@ -52,7 +52,7 @@ class HomePage extends Component {
     
     remove() {
       ws.emit('json', {command: "REMOVE",
-                       platform: this.state.selectedRow[0]})
+                       platform: this.state.selectedRow[6]})
     }
   
     render() {
