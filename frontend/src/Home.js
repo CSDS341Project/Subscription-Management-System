@@ -9,7 +9,7 @@ import FormLabel from '@mui/material/FormLabel'
 import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack';
 import ws from "./socketConfig"
-import ModalPopup from './popup'
+import Popup from './popup'
 
 class HomePage extends Component {
     constructor(props) {
@@ -80,7 +80,6 @@ class HomePage extends Component {
       }.bind(this));
 
       //receive data about platform data
-
       const onRowSelectionChange = (cur, all, rows) => {
         const res = all.map(item => { return this.state.subscriptions.at(item.i) });
         const selected = res.map(item => {
@@ -306,10 +305,10 @@ class HomePage extends Component {
               columns={columns}
               options={options} />
           </ThemeProvider>
-          <ModalPopup  
+          <Popup  
             showModalPopup={this.state.showPopup}  
             onPopupClose={this.isShowPopup}  
-        ></ModalPopup> 
+        ></Popup> 
         </div>
         
         <Box

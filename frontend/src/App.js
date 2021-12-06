@@ -1,5 +1,5 @@
 import './App.css';
-import LoginPage from './login';
+import Login from './login';
 import HomePage from './Home';
 import ws from './socketConfig'
 import { BrowserRouter, Route, Routes, } from 'react-router-dom';
@@ -19,7 +19,7 @@ function App() {
       <header className="App-header">
           <BrowserRouter basename="/">
               <Routes>
-                <Route path="/" element={<LoginPage />} />
+                <Route path="/" element={<Login />} />
                 <Route path="/home" element={<HomePage />} />
 
               </Routes>

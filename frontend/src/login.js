@@ -5,7 +5,7 @@ import ws from "./socketConfig"
 import logo from './logo.svg';
 
 
-class LoginPage extends Component {
+class Login extends Component {
     constructor(props) {
       super();
       this.state = {
@@ -15,21 +15,19 @@ class LoginPage extends Component {
       };
 
   
-      this.handleUserChange = this.handleUserChange.bind(this);
-      this.handlePassChange = this.handlePassChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.ignoreError = this.ignoreError.bind(this);
+      this.usernameChange = this.usernameChange.bind(this);
+      this.passwordChange = this.passwordChange.bind(this);
+      this.pass = this.pass.bind(this);
+      this.performSubmit = this.performSubmit.bind(this);
     }
   
-    handleSubmit(evt) {
+    performSubmit(evt) {
       evt.preventDefault();
-  
       if (!this.state.username) {
-        return this.setState({ er: 'Please Enter Your Username' });
+        return this.setState({ er: 'Enter your username.' });
       }
-  
       if (!this.state.password) {
-        return this.setState({ er: 'Please Enter Your Password' });
+        return this.setState({ er: 'Enter your password.' });
       }
 
       ws.emit('json', {command: "login",
@@ -38,19 +36,19 @@ class LoginPage extends Component {
       
     }
   
-    handleUserChange(evt) {
+    usernameChange(evt) {
       this.setState({
         username: evt.target.value,
       });
     };
   
-    handlePassChange(evt) {
+    passwordChange(evt) {
       this.setState({
         password: evt.target.value,
       });
     }
   
-    ignoreError() {
+    pass() {
       this.setState({ er: '' });
     }
   
@@ -58,15 +56,15 @@ class LoginPage extends Component {
   
       return (
         <><img src={logo} className="App-logo" alt="logo" /><div className="Login">
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.performSubmit}>
             {this.state.er &&
-              <h3 data-test="er" onClick={this.ignoreError}>
-                <button onClick={this.ignoreError}>✖</button>
+              <h3 data-test="er" onClick={this.pass}>
+                <button onClick={this.pass}>✖</button>
                 {this.state.er}
               </h3>}
-            <TextField type="text" label="username" variant="filled" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
+            <TextField type="text" label="username" variant="filled" data-test="username" value={this.state.username} onChange={this.usernameChange} />
 
-            <TextField type="password" label="password" variant="filled" data-test="password" value={this.state.password} onChange={this.handlePassChange} />
+            <TextField type="password" label="password" variant="filled" data-test="password" value={this.state.password} onChange={this.passwordChange} />
 
             <Button variant="contained" type="submit" value="Log In" data-test="submit">Log In</Button>
           </form>
@@ -76,4 +74,4 @@ class LoginPage extends Component {
     }
   }
   
-  export default LoginPage;
+  export default Login;
